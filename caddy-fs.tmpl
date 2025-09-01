@@ -1,0 +1,156 @@
+{{- define "icon"}}
+{{- if .IsDir}}
+{{- if .IsSymlink}}
+<pre class="icon">
+ .----.
+:----.'---.
+:    '----:
+:     ===&gt;:
+'---------'</pre>
+{{- else}}
+<pre class="icon">
+.-----.
+:----.'---.
+:    '----:
+:         :
+'---------'</pre>
+{{end}}
+{{- else if .HasExt ".jpg" ".jpeg" ".png" ".gif" ".webp" ".tiff" ".bmp" ".heif" ".heic" ".svg"}}
+<pre class="icon">
+.'''''''''.
+: .'.   . :
+:'   '.' ':
+:      '. :
+'---------'</pre>
+{{- else if .HasExt ".mp4" ".mov" ".m4v" ".mpeg" ".mpg" ".avi" ".ogg" ".webm" ".mkv" ".vob" ".gifv" ".3gp"}}
+<pre class="icon">
+.........
+:-:   :-:
+:-:===:-:
+:-:   :-:
+'''''''''</pre>
+{{- else if .HasExt ".mp3" ".m4a" ".aac" ".ogg" ".flac" ".wav" ".wma" ".midi" ".cda"}}
+<pre class="icon">
+   .....
+  :.....:
+  :     :
+..:   ..:
+'.'   '.'</pre>
+{{- else if .HasExt ".pdf"}}
+<pre class="icon">
+.--..
+:  :.:
+:PDF :
+'----'</pre>
+{{- else if .HasExt ".txt" ".doc" ".docx" ".odt" ".fodt" ".rtf" ".html" ".htm" ".css" ".json" ".json5" ".jsonc"}}
+<pre class="icon">
+.---..
+: - :.:
+: --- :
+: --- :
+'-----'</pre>
+{{- else if .HasExt ".xls" ".xlsx" ".ods" ".fods" ".csv" ".tsv"}}
+<pre class="icon">
+.---..
+:___:.:
+:|_|__:
+:||__|:
+'-----'</pre>
+{{- else if .HasExt ".ppt" ".pptx" ".odp" ".fodp"}}
+<pre class="icon">
+.-------.
+:| .   |:
+:| | | |:
+'--...--'
+ ..:::..</pre>
+{{- else if .HasExt ".zip" ".gz" ".xz" ".tar" ".7z" ".rar" ".xz" ".zst"}}
+<pre class="icon">
+.-.-..
+: : :.:
+: '.  :
+:  .' :
+'-[@]-'</pre>
+{{- else if .HasExt ".bash" ".sh" ".com" ".bat" ".dll" ".so" ".js" }}
+<pre class="icon">
+   .......
+  :    ::'
+  :    :
+  :    :
+':::::.'</pre>
+{{- else}}
+{{- if .IsSymlink}}
+<pre class="icon">
+.---..
+:   :.:
+:     :
+: ===&gt;:
+'-----'</pre>
+{{- else}}
+<pre class="icon">
+.---..
+:   :.:
+:     :
+:     :
+'-----'</pre>
+{{- end}}
+{{- end}}
+{{- end}}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{html .Name}}</title>
+    <link rel="canonical" href="{{.Path}}/" />
+    <meta charset="utf-8">
+    <meta name="color-scheme" content="dark">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/caddy-fs.css" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="wrapper">
+            <div class="breadcrumbs">Folder Path</div>
+            <h1>
+                {{range $i, $crumb := .Breadcrumbs}}<a href="{{html $crumb.Link}}">{{html $crumb.Text}}</a>{{if ne $i
+                0}}/{{end}}{{end}}
+            </h1>
+        </div>
+    </header>
+    <div class="wrapper">
+        <main>
+            <div class="meta">
+                <div id="summary">
+                    <span class="meta-item">
+                        <b>{{.NumDirs}}</b> director{{if eq 1
+                        .NumDirs}}y{{else}}ies{{end}}
+                    </span>
+                    <span class="meta-item">
+                        <b>{{.NumFiles}}</b> file{{if ne 1 .NumFiles}}s{{end}}
+                    </span>
+                    <span class="meta-item">
+                        <b>{{.HumanTotalFileSize}}</b> total
+                    </span>
+                    {{- if ne 0 .Limit}}
+                    <span class="meta-item">
+                        (of which only <b>{{.Limit}}</b> are displayed)
+                    </span>
+                    {{- end}}
+                </div>
+            </div>
+            <div class="listing grid">
+                {{- range .Items}}
+                <div class="entry">
+                    <a href="{{html .URL}}" title='{{html (.HumanModTime "January 2, 2006 at 15:04:05")}}'>
+                        {{template "icon" .}}
+                        <div class="name">{{html .Name}}</div>
+                        <div class="size">{{.HumanSize}}</div>
+                    </a>
+                </div>
+                {{- end}}
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
