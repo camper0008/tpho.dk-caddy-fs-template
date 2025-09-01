@@ -1,0 +1,6 @@
+file_server /caddy-fs.css {
+    root <PROJECT>/tpho.dk/
+}
+file_server {
+    browse <PROJECT>/tpho.dk/caddy-fs.tmpl
+}
